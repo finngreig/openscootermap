@@ -22,11 +22,46 @@
 <body>
   <div id="mapid"></div>
   <script>
+    var lime = true;
+    var onzo = true;
+
+    var limeToggle = function (checkbox) {
+      lime = checkbox.checked;
+    };
+
+    var onzoToggle = function (checkbox) {
+      onzo = checkbox.checked;
+    };
+
     var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+
+    var customControl =  L.Control.extend({
+
+      options: {
+        position: 'topright'
+      },
+
+      onAdd: function (map) {
+        var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+        container.style.padding = "10px";
+        container.style.backgroundColor = 'white';
+        container.innerHTML = '<input type="checkbox" name="lime" onchange="limeToggle(this)"> Lime</input><br\>' +
+                              '<input type="checkbox" name="onzo" onchange="onzoToggle(this)"> Onzo</input>';
+        
+        return container;
+      }
+    });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(mymap);
+
+    mymap.addControl(new customControl());
+    
+    mymap.on('moveend', function (event) {
+      console.log("Hello")
+    })
   </script>
 </body>
 
