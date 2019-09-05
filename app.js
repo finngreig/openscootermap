@@ -68,16 +68,18 @@ const genQs = (params) => {
         const float = parseFloat(num);
         return floatFloor(float, 3);
     });
-    const [user_lat, user_long] = midPoint(northeast_lat, northeast_long, southwest_lat, southwest_long).map(num => num.toFixed(3));
+    const [user_lat, user_long] = midPoint(northeast_lat, northeast_long, southwest_lat, southwest_long)
+                                    .map(num => num.toFixed(3));
 
-    return "?user_location=" + user_lat + "," + user_long + "&northeast_point=" + northeast_lat + "," + northeast_long + "&southwest_point=" +
-        southwest_lat + "," + southwest_long + "&company=" + params["company"];
+    return `?user_location=${user_lat},${user_long}&northeast_point=${northeast_lat},${northeast_long}&southwest_point=
+            ${southwest_lat},${southwest_long}&company=${params["company"]}`;
 };
 
 app.get('/scooters', parse, async (req, res) => {
     client.exists(req.body, async (err, reply) => {
         if (reply === 0) {
-            const apiResponse = await fetch("https://vehicles.scootermap.com/api/vehicles" + req.body + "&mode=ride&randomize=false",
+            const apiResponse = await fetch("https://vehicles.scootermap.com/api/vehicles" + req.body +
+                "&mode=ride&randomize=false",
                 {
                     headers: {
                         "Accept": "application/json, text/plain, */*",
