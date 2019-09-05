@@ -22,18 +22,56 @@
 <body>
   <div id="mapid"></div>
   <script>
-    var lime = true;
-    var onzo = true;
+    let lime = true;
+    let onzo = true;
 
-    var limeToggle = function (checkbox) {
+    const limeIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    let onzoIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    const limeToggle = function (checkbox) {
       lime = checkbox.checked;
     };
 
-    var onzoToggle = function (checkbox) {
+    const onzoToggle = function (checkbox) {
       onzo = checkbox.checked;
     };
 
-    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    const loadScooters = function (company, icon) {
+      layerGroup.clearLayers();
+
+      let northEast = map.getBounds().getNorthEast();
+      let southWest = map.getBounds().getSouthWest();
+
+      northEast = `${northEast.lat},${northEast.lng}`;
+      southWest = `${southWest.lat},${southWest.lng}`;
+
+      const apiResponse = fetch(`${window.location.href}scooters?northeast_point=${northEast}&southwest_point=${southWest}&company=${company}`)
+              .then(async function (response) {
+                const scooterArray = await response.json();
+                scooterArray.vehicles.forEach(function (element) {
+                  const mark = L.marker([element.latitude, element.longitude], {icon: icon}).addTo(layerGroup);
+                  mark.bindPopup(`<span>Brand: ${element.company.toUpperCase()}</span><br><span>Battery level: ${element.battery_level.toUpperCase()}</span>`);
+                })
+              });
+    };
+
+    const map = L.map('mapid').setView([51.505, -0.09], 13);
+    const layerGroup = L.layerGroup().addTo(map);
 
     var customControl =  L.Control.extend({
 
@@ -46,21 +84,22 @@
 
         container.style.padding = "10px";
         container.style.backgroundColor = 'white';
-        container.innerHTML = '<input type="checkbox" name="lime" onchange="limeToggle(this)"> Lime</input><br\>' +
-                              '<input type="checkbox" name="onzo" onchange="onzoToggle(this)"> Onzo</input>';
+        container.innerHTML = '<input type="checkbox" name="lime" onchange="limeToggle(this)" checked> Lime</input><br\>' +
+                              '<input type="checkbox" name="onzo" onchange="onzoToggle(this)" disabled> Onzo (coming soon)</input>';
         
         return container;
       }
     });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mymap);
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      noWrap: true
+    }).addTo(map);
 
-    mymap.addControl(new customControl());
-    
-    mymap.on('moveend', function (event) {
-      console.log("Hello")
+    map.addControl(new customControl());
+
+    map.on('moveend', function (event) {
+      if (lime) loadScooters('lime', limeIcon);
     })
   </script>
 </body>
