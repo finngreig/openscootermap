@@ -56,12 +56,11 @@
       northEast = `${northEast.lat},${northEast.lng}`;
       southWest = `${southWest.lat},${southWest.lng}`;
 
-      let existingScooters = Object.keys(group._layers).map(s => group._layers[s].options.vehicleId);
-
       fetch(`${window.location.href}scooters?northeast_point=${northEast}&southwest_point=${southWest}&company=${company}`)
         .then(async function (response) {
           const scooterArray = await response.json();
           scooterArray.vehicles.forEach(function (element) {
+            let existingScooters = Object.keys(group._layers).map(s => group._layers[s].options.vehicleId);
             if (!existingScooters.includes(element.vehicle_id)) {
               const mark = L.marker([element.latitude, element.longitude], {
                 icon: icon,
@@ -95,6 +94,10 @@
     L.control.layers(null, markerGroups).addTo(map);
 
     map.on('moveend', function (event) {
+      loadScooters('lime', limeIcon, limeGroup);
+    });
+
+    document.addEventListener('DOMContentLoaded', function(event) {
       loadScooters('lime', limeIcon, limeGroup);
     })
   </script>
