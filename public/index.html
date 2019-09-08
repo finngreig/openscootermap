@@ -40,6 +40,13 @@
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
     });
+    
+    const updateScooter = function (group, newScooter) {
+      const existingMarkerKey = Object.keys(group._layers).find(s => group._layers[s].options.vehicleId === newScooter.vehicle_id);
+      const markerToUpdate = group._layers[existingMarkerKey];
+      markerToUpdate._latlng = new L.LatLng(newScooter.latitude, newScooter.longitude);
+      group._layers[existingMarkerKey] = markerToUpdate;
+    };
 
     const loadScooters = function (company, icon, group) {
 
@@ -49,12 +56,21 @@
       northEast = `${northEast.lat},${northEast.lng}`;
       southWest = `${southWest.lat},${southWest.lng}`;
 
+      let existingScooters = Object.keys(group._layers).map(s => group._layers[s].options.vehicleId);
+
       fetch(`${window.location.href}scooters?northeast_point=${northEast}&southwest_point=${southWest}&company=${company}`)
         .then(async function (response) {
           const scooterArray = await response.json();
           scooterArray.vehicles.forEach(function (element) {
-            const mark = L.marker([element.latitude, element.longitude], {icon: icon}).addTo(group);
-            mark.bindPopup(`<span>Brand: ${element.company.toUpperCase()}</span><br><span>Battery level: ${element.battery_level.toUpperCase()}</span>`);
+            if (!existingScooters.includes(element.vehicle_id)) {
+              const mark = L.marker([element.latitude, element.longitude], {
+                icon: icon,
+                vehicleId: element.vehicle_id
+              }).addTo(group);
+              mark.bindPopup(`<span>Brand: ${element.company.toUpperCase()}</span><br><span>Battery level: ${element.battery_level.toUpperCase()}</span>`);
+            } else {
+              updateScooter(group, element);
+            }
           })
         });
     };
