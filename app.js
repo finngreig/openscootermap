@@ -5,8 +5,13 @@ const fetch = require('node-fetch');
 
 const app = express();
 
-const redis = require('redis'),
+const redis = require('redis');
+let client;
+if (process.env.REDIS_URL) {
+    client = redis.createClient(process.env.REDIS_URL);
+} else {
     client = redis.createClient();
+}
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
