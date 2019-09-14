@@ -16,6 +16,14 @@ if (process.env.REDIS_URL) {
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+/**
+ * A function to check that the required query parameters are in the URL and to parse the query object in the request
+ * object into a string for use as a Redis key later
+ * @param req           The request object
+ * @param res           The response object
+ * @param next          The next function in the middleware chain
+ * @returns {*|number}  Ends the request with a 401 response if the query parameters are not correctly present
+ */
 const parse = (req, res, next) => {
     const keys = Object.keys(req.query);
     if (!(keys.length === 3 && keys.includes("northeast_point") &&
@@ -27,6 +35,13 @@ const parse = (req, res, next) => {
     next();
 };
 
+/**
+ * Calculates the ceiling of a float and if the float is negative it calculates the "absolute ceiling" - technically the
+ * floor of the negative float. Used for geospatial calculations.
+ * @param v             The float to round to a ceiling
+ * @param n             The decimal places to round to
+ * @returns {number}    The rounded ceiling float
+ */
 const floatCeil = (v, n) => {
     if (v < 0) {
         v = Math.abs(v);
@@ -35,6 +50,13 @@ const floatCeil = (v, n) => {
     return Math.ceil(v * Math.pow(10, n)) / Math.pow(10, n);
 };
 
+/**
+ * Calculates the floor of a float and if the float is negative is calculates the "absolute floor" - technically the ceiling
+ * of the negative float. Used for geospatial calculations.
+ * @param v             The float to round to a floor
+ * @param n             The decimal places to round to
+ * @returns {number}    The rounded floor float
+ */
 const floatFloor = (v, n) => {
     if (v < 0) {
         v = Math.abs(v);
@@ -43,6 +65,14 @@ const floatFloor = (v, n) => {
     return Math.floor(v * Math.pow(10, n)) / Math.pow(10, n);
 };
 
+/**
+ * Calculates the coordinate midpoint in a square area on the surface of the Earth.
+ * @param latitude1     The latitude of the first corner in a diagonal pair
+ * @param longitude1    The longitude of the first corner in a diagonal pair
+ * @param latitude2     The latitude of the second corner in a diagonal pair
+ * @param longitude2    The longitude of the second corner in a diagonal pair
+ * @returns {*[]}       An array of latitude and longitude
+ */
 const midPoint = (latitude1, longitude1, latitude2, longitude2) => {
     const DEG_TO_RAD = Math.PI / 180;     // To convert degrees to radians.
 
@@ -63,6 +93,11 @@ const midPoint = (latitude1, longitude1, latitude2, longitude2) => {
     return [lat / DEG_TO_RAD, lng / DEG_TO_RAD];
 };
 
+/**
+ * Creates a query string from an object of query parameters, to be used as the key for values in a Redis instance.
+ * @param params        The object of parameters, usually req.query
+ * @returns {string}    The query string
+ */
 const genQs = (params) => {
 
     const [northeast_lat, northeast_long] = params["northeast_point"].split(',').map(num => {
@@ -80,6 +115,11 @@ const genQs = (params) => {
             ${southwest_lat},${southwest_long}&company=${params["company"]}`;
 };
 
+/**
+ * Endpoint that returns a JSON array of scooters to the client. If there is nothing cached for the request then it gets
+ * a response from the third-party API, caches it in Redis and then serves it to the client. If there is a value cached for
+ * the request then it gets it from Redis and serves it to the client.
+ */
 app.get('/scooters', parse, async (req, res) => {
     client.exists(req.body, async (err, reply) => {
         if (reply === 0) {
