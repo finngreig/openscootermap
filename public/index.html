@@ -23,23 +23,27 @@
 <body>
   <div id="mapid"></div>
   <script>
-
-    const limeIcon = new L.Icon({
-      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    const iconBase = {
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
+    };
+
+    const userIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+      ...iconBase
+    });
+
+    const limeIcon = new L.Icon({
+      iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+      ...iconBase
     });
 
     let onzoIcon = new L.Icon({
       iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41]
+      ...iconBase
     });
     
     const updateScooter = function (group, newScooter) {
@@ -50,14 +54,13 @@
     };
 
     const loadScooters = function (company, icon, group) {
-
       let northEast = map.getBounds().getNorthEast();
       let southWest = map.getBounds().getSouthWest();
 
       northEast = `${northEast.lat},${northEast.lng}`;
       southWest = `${southWest.lat},${southWest.lng}`;
 
-      fetch(`${window.location.href}scooters?northeast_point=${northEast}&southwest_point=${southWest}&company=${company}`)
+      fetch(`https://vehicles.scootermap.com/api/vehicles?user_location=${user_lat},${user_long}&northeast_point=${northEast}&southwest_point=${southWest}&company=${company}&mode=ride&randomize=false`)
         .then(async function (response) {
           const scooterArray = await response.json();
           scooterArray.vehicles.forEach(function (element) {
