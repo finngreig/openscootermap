@@ -53,14 +53,16 @@
       group._layers[existingMarkerKey] = markerToUpdate;
     };
 
-    const loadScooters = function (company, icon, group) {
+    const loadFromScooterMap = function (company, icon, group) {
       let northEast = map.getBounds().getNorthEast();
       let southWest = map.getBounds().getSouthWest();
 
       northEast = `${northEast.lat},${northEast.lng}`;
       southWest = `${southWest.lat},${southWest.lng}`;
 
-      fetch(`https://vehicles.scootermap.com/api/vehicles?user_location=${user_lat},${user_long}&northeast_point=${northEast}&southwest_point=${southWest}&company=${company}&mode=ride&randomize=false`)
+      if (!userLat || !userLon) return;
+
+      fetch(`https://vehicles.scootermap.com/api/vehicles?user_location=${userLat},${userLon}&northeast_point=${northEast}&southwest_point=${southWest}&company=${company}&mode=ride&randomize=false`)
         .then(async function (response) {
           const scooterArray = await response.json();
           scooterArray.vehicles.forEach(function (element) {
@@ -78,12 +80,41 @@
         });
     };
 
+    const loadOnzo = function(icon = onzoIcon, group = onzoGroup) {
+      let northEast = map.getBounds().getNorthEast();
+      let southWest = map.getBounds().getSouthWest();
+
+      let centreLat = (northEast.lat + southWest.lat) / 2;
+      let centreLon = (northEast.lng + southWest.lng) / 2;
+
+      fetch(`${window.location.href}onzo/${centreLat}/${centreLon}/100.0`)
+              .then(async function (response) {
+                const scooterArray = await response.json();
+                scooterArray.data.forEach(function (element) {
+                  let existingScooters = Object.keys(group._layers).map(s => group._layers[s].options.vehicleId);
+                  if (!existingScooters.includes(element.id)) {
+                    const mark = L.marker([element.latitude, element.longitude], {
+                      icon: icon,
+                      vehicleId: element.id
+                    }).addTo(group);
+                    mark.bindPopup(`<span>Brand: ONZO</span><br><span>Battery level: ${element.battery}%</span>`);
+                  } else {
+                    updateScooter(group, element);
+                  }
+                })
+              });
+    };
+
+    let userMarker = null;
+    let userLat = null;
+    let userLon = null;
+
     const limeGroup = L.layerGroup();
     const onzoGroup = L.layerGroup();
 
     const map = L.map('mapid', {
       layers: [limeGroup, onzoGroup]
-    }).setView([51.505, -0.09], 13);
+    }).setView([-40.9006, 174.8860], 5);
 
     const markerGroups = {
       "Lime": limeGroup,
@@ -98,12 +129,25 @@
     L.control.layers(null, markerGroups).addTo(map);
 
     map.on('moveend', function (event) {
-      loadScooters('lime', limeIcon, limeGroup);
+      loadFromScooterMap('lime', limeIcon, limeGroup);
+      loadOnzo();
     });
 
-    document.addEventListener('DOMContentLoaded', function(event) {
-      loadScooters('lime', limeIcon, limeGroup);
-    })
+    map.locate({setView: true,
+      maxZoom: 16
+    });
+
+    function onLocationFound(e) {
+      if (userMarker) {
+        map.removeLayer(userMarker)
+      }
+      userMarker = L.marker(e.latlng).addTo(map);
+      userLat = e.latlng.lat;
+      userLon = e.latlng.lng;
+    }
+
+    map.on('locationfound', onLocationFound);
+
   </script>
 </body>
 
