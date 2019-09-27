@@ -1,3 +1,5 @@
+import * as L from "leaflet";
+
 import {updateScooter} from "./vehicleUtils.js";
 
 export const loadFromScooterMap = function (map, userLat, userLon, company, icon, group) {

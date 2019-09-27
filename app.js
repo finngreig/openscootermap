@@ -6,7 +6,7 @@ const fetch = require('node-fetch');
 const app = express();
 
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.get('/onzo/:lat/:lon/:range', async function (req, res) {
     const apiResponse = await fetch(`https://app.onzo.co.nz/nearby/${req.params.lat}/${req.params.lon}/5000.0.json`,

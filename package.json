@@ -3,12 +3,20 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "build": "parcel build ./frontend/index.html --no-source-maps"
   },
   "dependencies": {
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "leaflet": "^1.5.1",
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0"
-  }
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
+  },
+  "browserslist": [
+    "last 1 Chrome versions"
+  ]
 }
