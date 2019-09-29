@@ -36,7 +36,7 @@ export const loadOnzo = function(map, icon, group) {
     let centreLat = (northEast.lat + southWest.lat) / 2;
     let centreLon = (northEast.lng + southWest.lng) / 2;
 
-    fetch(`${window.location.href}onzo/${centreLat}/${centreLon}/100.0`)
+    fetch(`${window.location.href}.netlify/functions/onzo?lat=${centreLat}&lon=${centreLon}&range=100.0`)
         .then(async function (response) {
             const scooterArray = await response.json();
             scooterArray.data.forEach(function (element) {
