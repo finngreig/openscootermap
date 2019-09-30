@@ -54,6 +54,7 @@ map.on('locationfound', function (e) {
         map.setView([e.latlng.lat, e.latlng.lng], 16)
     }
     currentPos = L.marker(e.latlng).addTo(map);
+    currentPos.bindPopup("<span>Your Location</span>");
     userLat = e.latlng.lat;
     userLon = e.latlng.lng;
 });
