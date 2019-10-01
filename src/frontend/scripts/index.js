@@ -6,32 +6,13 @@ let userLat = null;
 let userLon = null;
 let currentPos = null;
 
-// function init() {
-//     const providers = require("./providers");
-//     const providerKeys = Object.keys(providers);
-//
-//     let markerGroups = {};
-//     let markerLayers = [];
-//
-//     providerKeys.forEach(key => {
-//         markerGroups.key = providers[key];
-//         markerLayers.push(providers[key].group);
-//     });
-//
-//     return [markerGroups, markerLayers]
-// }
-//
-// const [markerGroups, markerLayers] = init();
-
-const markerGroups = {
+const groups = {
     "Lime": Lime.group,
     "Onzo": Onzo.group
 };
 
-const markerLayers = [Lime.group, Onzo.group];
-
 const map = L.map('mapid', {
-    layers: markerLayers
+    layers: Object.values(groups)
 }).setView([-40.9006, 174.8860], 5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -39,12 +20,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     noWrap: true
 }).addTo(map);
 
-L.control.layers(null, markerGroups).addTo(map);
+L.control.layers(null, groups).addTo(map);
 
 map.locate({setView: false,
     maxZoom: 16,
     watch: true,
-    enableHighAccuracy: true
+    enableHighAccuracy: true,
+    maximumAge: 30000
 });
 
 map.on('locationfound', function (e) {
@@ -52,6 +34,7 @@ map.on('locationfound', function (e) {
         map.removeLayer(currentPos);
     } else {
         map.setView([e.latlng.lat, e.latlng.lng], 16)
+        updateAll();
     }
     currentPos = L.marker(e.latlng).addTo(map);
     currentPos.bindPopup("<span>Your Location</span>");
@@ -59,10 +42,14 @@ map.on('locationfound', function (e) {
     userLon = e.latlng.lng;
 });
 
-map.on('moveend', function () {
+function updateAll() {
     let northEast = map.getBounds().getNorthEast();
     let southWest = map.getBounds().getSouthWest();
 
     updater(Lime, northEast, southWest, userLat, userLon);
     updater(Onzo, northEast, southWest, userLat, userLon);
+}
+
+map.on('moveend', function () {
+    updateAll();
 });
