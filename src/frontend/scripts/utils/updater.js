@@ -1,6 +1,15 @@
 import updateScooter from "./updateVehicle";
 import * as L from "leaflet";
 
+/**
+ * Function that adds new vehicle markers to the map or updates the location of markers already on the map if the vehicle's
+ * location has changed.
+ * @param vehicleObject     The vehicle provider's object e.g. Lime
+ * @param northEast         The coordinates of the northeast corner of the map currently in the viewport
+ * @param southWest         The coordinates of the southwest corner of the map currently in the viewport
+ * @param userLat           The latitude of the user's location
+ * @param userLon           The longitude of the user's location
+ */
 export default function (vehicleObject, northEast, southWest, userLat, userLon) {
     vehicleObject.loader(northEast, southWest, userLat, userLon)
         .then((vehicles) => {
