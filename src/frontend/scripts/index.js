@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import updater from "./utils/updater";
-import {Lime, Onzo, Jump} from "./providers";
+import {Lime, Onzo, Jump, Beam} from "./providers";
 
 let userLat = null;
 let userLon = null;
@@ -9,7 +9,8 @@ let currentPos = null;
 const groups = {
     "Lime": Lime.group,
     "Onzo": Onzo.group,
-    "Jump": Jump.group
+    "Jump": Jump.group,
+    "Beam": Beam.group
 };
 
 const map = L.map('mapid', {
@@ -50,6 +51,7 @@ function updateAll() {
     updater(Lime, northEast, southWest, userLat, userLon);
     updater(Onzo, northEast, southWest, userLat, userLon);
     updater(Jump);
+    updater(Beam, northEast, southWest);
 }
 
 map.on('moveend', function () {
