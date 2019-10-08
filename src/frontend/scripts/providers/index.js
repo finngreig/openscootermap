@@ -1,4 +1,4 @@
-import {Lime} from "./lime";
+import {Lime, Bird} from "./scootermap";
 import {Onzo} from "./onzo";
 import {Jump} from "./jump";
 import {Beam} from "./beam";
@@ -17,5 +17,6 @@ export {
     Lime,
     Onzo,
     Jump,
-    Beam
+    Beam,
+    Bird
 }

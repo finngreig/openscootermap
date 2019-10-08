@@ -10,8 +10,8 @@ import * as L from "leaflet";
  * @param userLat           The latitude of the user's location
  * @param userLon           The longitude of the user's location
  */
-export default function (vehicleObject, northEast, southWest, userLat, userLon) {
-    vehicleObject.loader(northEast, southWest, userLat, userLon)
+export default function (vehicleObject, northEast, southWest) {
+    vehicleObject.loader(northEast, southWest)
         .then((vehicles) => {
             vehicles.forEach((item) => {
                 const existingScooters = Object.keys(vehicleObject.group._layers).map((v) => vehicleObject.group._layers[v].options.vehicleId);
@@ -20,7 +20,7 @@ export default function (vehicleObject, northEast, southWest, userLat, userLon) 
                         icon: vehicleObject.icon,
                         vehicleId: item.id
                     }).addTo(vehicleObject.group);
-                    mark.bindPopup(`<span>Brand: ${vehicleObject.brand}</span><br><span>Battery level: ${item.battery.toUpperCase()}</span>`);
+                    mark.bindPopup(`<span>Brand: ${vehicleObject.brand}</span><br><span>Battery level: ${item.battery}</span>`);
                 } else {
                     updateScooter(vehicleObject.group, item);
                 }

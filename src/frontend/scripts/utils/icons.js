@@ -27,3 +27,8 @@ export const beamIcon = new L.Icon({
     iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
     ...iconBase
 });
+
+export const birdIcon = new L.Icon({
+    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    ...iconBase
+});

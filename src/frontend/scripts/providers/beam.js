@@ -15,6 +15,7 @@ function loader(northEast, southWest) {
     return fetch(`${window.location.href}.netlify/functions/beam?lat=${centreLat}&lon=${centreLon}&range=100.0`)
         .then((res) => {
             return res.json().then((data) => {
+                if (!data.data) return [];
                 return data.data.scooters.map((scooter) => {
                     return {
                         id: scooter.id,

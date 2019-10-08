@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import updater from "./utils/updater";
-import {Lime, Onzo, Jump, Beam} from "./providers";
+import {Lime, Onzo, Jump, Beam, Bird} from "./providers";
 
 let userLat = null;
 let userLon = null;
@@ -10,7 +10,8 @@ const groups = {
     "Lime": Lime.group,
     "Onzo": Onzo.group,
     "Jump": Jump.group,
-    "Beam": Beam.group
+    "Beam": Beam.group,
+    "Bird (and Partners)": Bird.group
 };
 
 const map = L.map('mapid', {
@@ -35,7 +36,7 @@ map.on('locationfound', function (e) {
     if (currentPos) {
         map.removeLayer(currentPos);
     } else {
-        map.setView([e.latlng.lat, e.latlng.lng], 16)
+        map.setView([e.latlng.lat, e.latlng.lng], 16);
         updateAll();
     }
     currentPos = L.marker(e.latlng).addTo(map);
@@ -48,10 +49,11 @@ function updateAll() {
     let northEast = map.getBounds().getNorthEast();
     let southWest = map.getBounds().getSouthWest();
 
-    updater(Lime, northEast, southWest, userLat, userLon);
-    updater(Onzo, northEast, southWest, userLat, userLon);
+    updater(Lime, northEast, southWest);
+    updater(Onzo, northEast, southWest);
     updater(Jump);
     updater(Beam, northEast, southWest);
+    updater(Bird, northEast, southWest);
 }
 
 map.on('moveend', function () {
