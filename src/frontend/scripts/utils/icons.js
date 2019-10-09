@@ -1,34 +1,31 @@
 import * as L from 'leaflet';
-
 const iconBase = {
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+    iconSize: [25, 25],
+    iconAnchor: [12, -1]
 };
 
 export const limeIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    iconUrl: require("../../assets/lime.png"),
     ...iconBase
 });
 
 export const onzoIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-yellow.png',
-    ...iconBase
-});
-
-export const jumpIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+    iconUrl: require("../../assets/onzo.png"),
     ...iconBase
 });
 
 export const beamIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png',
+    iconUrl: require("../../assets/beam.png"),
     ...iconBase
 });
 
 export const birdIcon = new L.Icon({
-    iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+    iconUrl: require("../../assets/bird.png"),
     ...iconBase
+});
+
+export const flamingoIcon = new L.Icon({
+    iconUrl: require("../../assets/flamingo.png"),
+    iconSize: [25, 39],
+    iconAnchor: [12, -1]
 });

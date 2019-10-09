@@ -1,7 +1,7 @@
 import {Lime, Bird} from "./scootermap";
 import {Onzo} from "./onzo";
-import {Jump} from "./jump";
 import {Beam} from "./beam";
+import {Flamingo} from "./flamingo";
 
 /*
 Please note that provider loader functions should return an array of vehicle objects, based on this common object format:
@@ -16,7 +16,7 @@ Please note that provider loader functions should return an array of vehicle obj
 export {
     Lime,
     Onzo,
-    Jump,
     Beam,
-    Bird
+    Bird,
+    Flamingo
 }

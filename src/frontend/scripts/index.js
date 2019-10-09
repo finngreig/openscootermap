@@ -1,6 +1,6 @@
 import * as L from "leaflet";
 import updater from "./utils/updater";
-import {Lime, Onzo, Jump, Beam, Bird} from "./providers";
+import {Lime, Onzo, Beam, Bird, Flamingo} from "./providers";
 
 let userLat = null;
 let userLon = null;
@@ -9,9 +9,9 @@ let currentPos = null;
 const groups = {
     "Lime": Lime.group,
     "Onzo": Onzo.group,
-    "Jump": Jump.group,
     "Beam": Beam.group,
-    "Bird (and Partners)": Bird.group
+    "Bird (and Partners)": Bird.group,
+    "Flamingo": Flamingo.group
 };
 
 const map = L.map('mapid', {
@@ -51,9 +51,9 @@ function updateAll() {
 
     updater(Lime, northEast, southWest);
     updater(Onzo, northEast, southWest);
-    updater(Jump);
     updater(Beam, northEast, southWest);
     updater(Bird, northEast, southWest);
+    updater(Flamingo);
 }
 
 map.on('moveend', function () {
