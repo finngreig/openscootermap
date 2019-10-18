@@ -1,0 +1,9 @@
+.clusterMarker {
+  height: 40px;
+  width: 40px;
+  background-color: grey;
+  color: white;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 2em;
+}

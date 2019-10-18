@@ -1,6 +1,9 @@
-import * as L from "leaflet";
+import "leaflet";
+import 'leaflet.markercluster';
+import 'leaflet.markercluster.layersupport';
 import updater from "./utils/updater";
 import {Lime, Onzo, Beam, Bird, Flamingo} from "./providers";
+import '../styles/clusterMarker.css';
 
 let userLat = null;
 let userLon = null;
@@ -14,16 +17,28 @@ const groups = {
     "Flamingo": Flamingo.group
 };
 
-const map = L.map('mapid', {
-    layers: Object.values(groups)
-}).setView([-40.9006, 174.8860], 5);
+const map = L.map('mapid').setView([-40.9006, 174.8860], 5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     noWrap: true
 }).addTo(map);
 
+const markerClusterLayerSupport = L.markerClusterGroup.layerSupport({
+    iconCreateFunction: function(cluster) {
+        return L.divIcon({
+            iconSize: [40, 40],
+            className: 'clusterMarker',
+            html: '<b>' + cluster.getChildCount() + '</b>'
+        });
+    }
+});
+markerClusterLayerSupport.addTo(map);
+markerClusterLayerSupport.checkIn(Object.values(groups));
+
 L.control.layers(null, groups).addTo(map);
+
+Object.values(groups).forEach(item => item.addTo(map));
 
 map.locate({setView: false,
     maxZoom: 16,
@@ -54,6 +69,8 @@ function updateAll() {
     updater(Beam, northEast, southWest);
     updater(Bird, northEast, southWest);
     updater(Flamingo);
+
+    markerClusterLayerSupport.refreshClusters();
 }
 
 map.on('moveend', function () {
