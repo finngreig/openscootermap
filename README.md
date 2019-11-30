@@ -4,6 +4,8 @@ A map built with Leaflet and OpenStreetMap that shows the locations of shared bi
 
 Currently the map shows the locations of Lime scooters and Onzo bikes, with more providers coming in the near future.
 
+![Preview](preview.gif)
+
 ## Usage
 
 #### To start:
