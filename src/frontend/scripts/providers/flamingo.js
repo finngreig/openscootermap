@@ -17,7 +17,7 @@ function getFromCity(city) {
                         id: vehicle.bike_id,
                         lat: vehicle.lat,
                         lon: vehicle.lon,
-                        battery: 'Not reported'
+                        battery: ((vehicle.current_range_meters / 38000) * 100).toFixed(0)
                     };
                 });
             }).catch(err => {
