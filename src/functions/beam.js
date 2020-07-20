@@ -11,7 +11,7 @@ export async function handler(event, context) {
                 headers: {
                         "x-requested-with": "XMLHttpRequest",
                         "accept": "application/json",
-                        "user-agent": "escooterapp/1.17.0; android",
+                        "user-agent": "escooterapp/1.36.0; ios",
                         "content-type": "application/json",
                         "accept-language": "en-US"
                     }
