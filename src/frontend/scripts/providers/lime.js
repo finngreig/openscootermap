@@ -21,7 +21,8 @@ function loader(northEast, southWest) {
                         plate_number: scooter.id,
                         latitude: scooter.bestLocation.coordinates[1],
                         longitude: scooter.bestLocation.coordinates[0],
-                        battery_level: `${scooter.lastReportedBattery}%`
+                        meter_range: `${scooter.lastReportedBattery}%` // Gives the meter range like that can be added like: 24.2km remaining
+                        battery_level: scooter.battery.type // Displays battery as: low, medium or high
                     }
                 });
             }).catch((err) => {
@@ -30,7 +31,7 @@ function loader(northEast, southWest) {
         })
 }
 
-export const Beam = {
+export const Lime = {
     brand: 'Lime',
     icon: limeIcon,
     group: L.layerGroup(),
