@@ -3,7 +3,7 @@ import axios from "axios";
 export async function handler(event, context) {
 
     try {
-        const response = await axios.get(`https://web-production.lime.bike/api/rider/v1/views/map?ne_lat=${event.queryStringParameters.lat}ne_lng=${event.queryStringParameters.lon}`&user_latitude=${event.queryStringParameters.lat}&user_longitude=${event.queryStringParameters.lon}&zoom=12,
+        const response = await axios.get(`https://web-production.lime.bike/api/rider/v1/views/map?ne_lat=${event.queryStringParameters.northEastLat}&ne_lng=${event.queryStringParameters.northEastLon}&user_latitude=${event.queryStringParameters.userLat}&user_longitude=${event.queryStringParameters.userLon}&sw_lat=${event.queryStringParameters.southWestLat}&sw_lng=${event.queryStringParameters.southWestLon}&zoom=16`,
             {
                 headers: {
                         "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX3Rva2VuIjoiUFNFQUxQNFQ0WVlaWCIsImxvZ2luX2NvdW50IjoxfQ.IwZCyO423W_YrtXLR3W9JGtsWIvH-2BcnCiCWj-mrKI",
