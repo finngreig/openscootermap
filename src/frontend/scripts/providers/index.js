@@ -1,4 +1,5 @@
-import {Lime, Bird} from "./scootermap";
+import {Lime} from "./lime"
+import {Bird} from "./scootermap";
 import {Onzo} from "./onzo";
 import {Beam} from "./beam";
 import {Flamingo} from "./flamingo";

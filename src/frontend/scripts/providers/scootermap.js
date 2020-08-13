@@ -1,4 +1,4 @@
-import {birdIcon, limeIcon} from "../utils/icons";
+import {birdIcon} from "../utils/icons";
 import * as L from "leaflet";
 
 class ScooterMap {
@@ -42,5 +42,4 @@ class ScooterMap {
     }
 }
 
-export const Lime = new ScooterMap('Lime', limeIcon);
 export const Bird = new ScooterMap('Bird', birdIcon);

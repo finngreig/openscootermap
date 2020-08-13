@@ -12,17 +12,18 @@ function loader(northEast, southWest) {
     const centreLat = (northEast.lat + southWest.lat) / 2;
     const centreLon = (northEast.lng + southWest.lng) / 2;
 
-    return fetch(`${window.location.href}.netlify/functions/lime?lat=${centreLat}&lon=${centreLon}&range=100.0`)
+    return fetch(`${window.location.href}.netlify/functions/lime?northEastLat=${northEast.lat}&northEastLon=${northEast.lng}&southWestLat=${southWest.lat}&southWestLon=${southWest.lng}&userLat=${centreLat}&userLon=${centreLon}`)
         .then((res) => {
             return res.json().then((data) => {
                 if (!data.data) return [];
-                return data.data.scooters.map((scooter) => {
+                return data.data.attributes.bikes
+                    .filter((scooter) => scooter.attributes.brand === 'lime')
+                    .map((scooter) => {
                     return {
-                        plate_number: scooter.id,
-                        latitude: scooter.bestLocation.coordinates[1],
-                        longitude: scooter.bestLocation.coordinates[0],
-                        meter_range: `${scooter.lastReportedBattery}%` // Gives the meter range like that can be added like: 24.2km remaining
-                        battery_level: scooter.battery.type // Displays battery as: low, medium or high
+                        id: scooter.attributes.plate_number,
+                        lat: scooter.attributes.latitude,
+                        lon: scooter.attributes.longitude,
+                        battery: `${Math.floor((scooter.attributes.meter_range / 25000) * 100)}%`
                     }
                 });
             }).catch((err) => {
