@@ -2,7 +2,7 @@
 
 A map built with Leaflet and OpenStreetMap that shows the locations of shared bikes and scooters from various companies.
 
-Currently the map shows the locations of Lime scooters and Onzo bikes, with more providers coming in the near future.
+Currently the map shows the locations of Lime, Flamingo, Bird and Beam Scooters, with more providers coming in the near future.
 
 ![Preview](preview.gif)
 
