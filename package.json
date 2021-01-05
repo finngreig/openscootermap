@@ -11,7 +11,7 @@
     "build:functions": "netlify-lambda build src/functions"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "leaflet": "^1.6.0",
     "leaflet.markercluster": "^1.4.1",
     "leaflet.markercluster.layersupport": "^2.0.1"
