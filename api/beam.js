@@ -1,12 +1,11 @@
 import axios from "axios";
 
-export async function handler(event, context) {
-
+module.exports = async (req, res) => {
     /*
       Latest version can be checked by sending the user-agent to https://gateway.ridebeam.com/api/versions
     */
-    try {
-        const response = await axios.get(`https://gateway.ridebeam.com/api/vehicles/scooter/latlong?latitude=${event.queryStringParameters.lat}&longitude=${event.queryStringParameters.lon}`,
+      try {
+        const response = await axios.get(`https://gateway.ridebeam.com/api/vehicles/scooter/latlong?latitude=${req.query.lat}&longitude=${req.query.lon}`,
             {
                 headers: {
                         "x-requested-with": "XMLHttpRequest",
@@ -18,18 +17,9 @@ export async function handler(event, context) {
             }
         );
         const data = response.data;
-        return {
-            statusCode: 200,
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        }
+        res.json(data);
     } catch (err) {
         console.log(err);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ msg: err.message }) // Could be a custom message or object i.e. JSON.stringify(err)
-        }
+        res.status(500).json({ msg: err.message });
     }
 }
